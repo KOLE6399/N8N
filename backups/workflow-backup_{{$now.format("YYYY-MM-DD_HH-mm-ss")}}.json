@@ -1,0 +1,3884 @@
+{
+  "data": [
+    {
+      "createdAt": "2025-03-26T11:09:45.914Z",
+      "updatedAt": "2025-03-26T17:11:16.000Z",
+      "id": "2quVDWlRUEUusLSX",
+      "name": "✅ Recrutement alternants - traitement candidatures par mail",
+      "active": true,
+      "nodes": [
+        {
+          "parameters": {
+            "text": "={{ $json.text }}",
+            "attributes": {
+              "attributes": [
+                {
+                  "name": "Etudes",
+                  "description": "Summary of your academic career. Focus on your high school and university studies. Summarize in 100 words maximum and also include your grade if applicable.",
+                  "required": true
+                },
+                {
+                  "name": "Expériences",
+                  "description": "Work history summary. Focus on your most recent work experiences. Summarize in 100 words maximum",
+                  "required": true
+                },
+                {
+                  "name": "Compétences",
+                  "description": "Extract the candidate’s technical skills. What software and frameworks they are proficient in. Make a bulleted list.",
+                  "required": true
+                }
+              ]
+            },
+            "options": {
+              "systemPromptTemplate": "You are an expert extraction algorithm.\nOnly extract relevant information from the text.\nIf you do not know the value of an attribute asked to extract, you may omit the attribute's value."
+            }
+          },
+          "id": "41e1a7ef-8585-4743-b360-e658cc2a2728",
+          "name": "Qualifications1",
+          "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+          "position": [
+            1220,
+            800
+          ],
+          "typeVersion": 1
+        },
+        {
+          "parameters": {
+            "model": {
+              "__rl": true,
+              "mode": "list",
+              "value": "gpt-4o-mini"
+            },
+            "options": {}
+          },
+          "id": "2f3b2105-f190-4ac9-9c45-a3b0fe71b98a",
+          "name": "OpenAI1",
+          "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+          "position": [
+            1280,
+            1260
+          ],
+          "typeVersion": 1.2,
+          "credentials": {
+            "openAiApi": {
+              "id": "Cm9Jjcm7pG45Orkj",
+              "name": "OpenAi Brigitte@businessdigital.fr"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "inputDataFieldName": "attachment_0",
+            "name": "=CV-{{ $now.format('yyyyLLdd') }}",
+            "driveId": {
+              "__rl": true,
+              "value": "1DyAIcFR-yW55t_FVOOFhymf1fjAdMf28",
+              "mode": "id"
+            },
+            "folderId": {
+              "__rl": true,
+              "value": "1DyAIcFR-yW55t_FVOOFhymf1fjAdMf28",
+              "mode": "id"
+            },
+            "options": {}
+          },
+          "id": "6e735693-6088-4546-bc57-1914f85ae733",
+          "name": "Telecharger CV1",
+          "type": "n8n-nodes-base.googleDrive",
+          "position": [
+            840,
+            320
+          ],
+          "typeVersion": 3,
+          "credentials": {
+            "googleDriveOAuth2Api": {
+              "id": "we12XBUnbWFxGLAu",
+              "name": "Google Drive cathya@businessdigital.fr"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "operation": "pdf",
+            "binaryPropertyName": "=attachment_0",
+            "options": {}
+          },
+          "id": "b3e19171-5a95-4e22-9b6f-7222719835c3",
+          "name": "Extracteur d'informations PDF1",
+          "type": "n8n-nodes-base.extractFromFile",
+          "position": [
+            840,
+            500
+          ],
+          "typeVersion": 1,
+          "alwaysOutputData": true
+        },
+        {
+          "parameters": {
+            "text": "={{ $json.text }}",
+            "schemaType": "manual",
+            "inputSchema": "{\n  \"name\": \"Florian Bounon\",\n  \"jobTitle\": \"Développeur\",\n  \"email\": \"florian.bounon@gmail.com\",\n  \"telephone\": \"0785593267\",\n  \"city\": \"Andresy\",\n  \"birthdate\": \"2004-11-14\"\n}",
+            "options": {
+              "systemPromptTemplate": "You are an expert extraction algorithm.\nOnly extract relevant information from the text.\nIf you do not know the value of an attribute asked to extract, you may omit the attribute's value."
+            }
+          },
+          "id": "2a44cf17-5862-417d-b91d-528d5c0197e0",
+          "name": "Extracteur Données personnelles1",
+          "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+          "position": [
+            1220,
+            520
+          ],
+          "typeVersion": 1
+        },
+        {
+          "parameters": {
+            "mode": "combine",
+            "combineBy": "combineAll",
+            "options": {}
+          },
+          "id": "12ab3110-a3bb-426b-9c62-e73fd03ce99c",
+          "name": "Fusion des informations1",
+          "type": "n8n-nodes-base.merge",
+          "position": [
+            2240,
+            480
+          ],
+          "typeVersion": 3,
+          "executeOnce": true
+        },
+        {
+          "parameters": {
+            "operation": "append",
+            "documentId": {
+              "__rl": true,
+              "value": "1CeG9Oya7uLMHvexZYU8osbbLtpxEJnA3jQFbXxGawls",
+              "mode": "list",
+              "cachedResultName": "Liste de candidats bruts",
+              "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CeG9Oya7uLMHvexZYU8osbbLtpxEJnA3jQFbXxGawls/edit?usp=drivesdk"
+            },
+            "sheetName": {
+              "__rl": true,
+              "value": 946817789,
+              "mode": "list",
+              "cachedResultName": "Mails",
+              "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CeG9Oya7uLMHvexZYU8osbbLtpxEJnA3jQFbXxGawls/edit#gid=946817789"
+            },
+            "columns": {
+              "mappingMode": "defineBelow",
+              "value": {
+                "Nom": "={{ $('Merge6').item.json.output.nom }}",
+                "Titre du profil": "={{ $('Merge6').item.json.output.titre }}",
+                "Email": "={{ $('Merge6').item.json.output.contact.email }}",
+                "Téléphone": "={{ $('Merge6').item.json.output.contact.telephone }}",
+                "LienCV": "={{ $json.webViewLink }}",
+                "Source": "=Mail",
+                "LienProfil": "={{ $('Merge6').item.json.output.contact.linkedin }}",
+                "Ville": "={{ $('Merge6').item.json.output.contact.ville }}",
+                "Date de naissance": "={{ $('Merge6').item.json.output.contact.date_naissance }}",
+                "Etudes": "={{ $json.output.Etudes }}",
+                "Expériences": "={{ $json.output['Expériences'] }}",
+                "Compétences": "={{ $json.output['Compétences'] }}"
+              },
+              "matchingColumns": [],
+              "schema": [
+                {
+                  "id": "Nom",
+                  "displayName": "Nom",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Titre du profil",
+                  "displayName": "Titre du profil",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Email",
+                  "displayName": "Email",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Téléphone",
+                  "displayName": "Téléphone",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "LienCV",
+                  "displayName": "LienCV",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Source",
+                  "displayName": "Source",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "LienProfil",
+                  "displayName": "LienProfil",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Ville",
+                  "displayName": "Ville",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Date de naissance",
+                  "displayName": "Date de naissance",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Etudes",
+                  "displayName": "Etudes",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Expériences",
+                  "displayName": "Expériences",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Compétences",
+                  "displayName": "Compétences",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                }
+              ],
+              "attemptToConvertTypes": false,
+              "convertFieldsToString": false
+            },
+            "options": {}
+          },
+          "type": "n8n-nodes-base.googleSheets",
+          "typeVersion": 4.5,
+          "position": [
+            2920,
+            480
+          ],
+          "id": "c4f5383b-ea28-425d-aa5b-d2fec238883e",
+          "name": "Google Sheets1",
+          "credentials": {
+            "googleSheetsOAuth2Api": {
+              "id": "JrQt8saJPmBb8xRc",
+              "name": "Google Sheets formation@businessdigital.fr"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "mode": "combine",
+            "combineBy": "combineAll",
+            "options": {}
+          },
+          "type": "n8n-nodes-base.merge",
+          "typeVersion": 3,
+          "position": [
+            1640,
+            520
+          ],
+          "id": "42cf55d1-ce55-429d-b8cd-315e8cecdf12",
+          "name": "Merge6"
+        },
+        {
+          "parameters": {
+            "conditions": {
+              "boolean": [
+                {
+                  "value1": "={{$binary.attachment_0}}",
+                  "operation": "isNotEmpty"
+                }
+              ]
+            }
+          },
+          "name": "Filtrer fichiers PDF",
+          "type": "n8n-nodes-base.if",
+          "typeVersion": 1,
+          "position": [
+            20,
+            300
+          ],
+          "id": "5d1c1f25-406e-482a-93d8-c953c5044006"
+        },
+        {
+          "parameters": {
+            "options": {}
+          },
+          "name": "Séparer pièces jointes",
+          "type": "n8n-nodes-base.splitInBatches",
+          "typeVersion": 1,
+          "position": [
+            480,
+            280
+          ],
+          "id": "4c77bf3d-2b4a-49d1-a75e-7aa42d6ab9fe"
+        },
+        {
+          "parameters": {
+            "format": "resolved",
+            "options": {}
+          },
+          "type": "n8n-nodes-base.emailReadImap",
+          "typeVersion": 2,
+          "position": [
+            -340,
+            520
+          ],
+          "id": "7a13a0d1-c806-46cf-8e1f-7c9adbdaa40b",
+          "name": "Nom : Lire toutes les candidatures IMAP",
+          "credentials": {
+            "imap": {
+              "id": "qSi1KwP4FxOZ5wxY",
+              "name": "IMAP cathya@businessdigital.fr"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict",
+                "version": 2
+              },
+              "conditions": [
+                {
+                  "id": "a064af88-56f8-446e-a322-7d6b73cae781",
+                  "leftValue": "={{ $('Merge6').item.json.output.contact.email }}",
+                  "rightValue": "=^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+                  "operator": {
+                    "type": "string",
+                    "operation": "regex"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "options": {}
+          },
+          "type": "n8n-nodes-base.if",
+          "typeVersion": 2.2,
+          "position": [
+            1860,
+            520
+          ],
+          "id": "4a0cb986-dddb-40f0-9bc3-c6359b2709bf",
+          "name": "Vérifier email candidat"
+        },
+        {
+          "parameters": {
+            "mode": "raw",
+            "jsonOutput": "={\n  \"Nom\": \"={{ $json.output.name || $json.output.Nom }}\",\n  \"Titre du profil\": \"={{ $json.output.profession || '' }}\",\n  \"Email\": \"={{ $json.output.contact.email || '' }}\",\n  \"Téléphone\": \"={{ $json.output.contact.phone || '' }}\",\n  \"LienCV\": \"={{ $json.webViewLink || '' }}\",\n  \"Source\": \"={{ $json.Source || '' }}\",\n  \"LienProfil\": \"={{ $json.output.contact.linkedin || '' }}\",\n  \"Ville\": \"={{ $json.output.contact.location || '' }}\",\n  \"Date de naissance\": \"={{ $json.output.contact.date_of_birth || $json.output.contact['Date de naissance'] || '' }}\",\n  \"Etudes\": \"={{ $json.output.Etudes || '' }}\",\n  \"Expériences\": \"={{ $json.output.Expériences || '' }}\",\n  \"Compétences\": \"={{ $json.output.Compétences || $json.output.skills?.join(', ') || '' }}\",\n  \"Date d'envoi\": \"\"\n}",
+            "options": {}
+          },
+          "type": "n8n-nodes-base.set",
+          "typeVersion": 3.4,
+          "position": [
+            2460,
+            480
+          ],
+          "id": "3547e2c2-b428-49e6-b7fb-1f6f43c38e55",
+          "name": "Edit Fields"
+        }
+      ],
+      "connections": {
+        "Qualifications1": {
+          "main": [
+            [
+              {
+                "node": "Merge6",
+                "type": "main",
+                "index": 1
+              }
+            ]
+          ]
+        },
+        "OpenAI1": {
+          "ai_languageModel": [
+            [
+              {
+                "node": "Qualifications1",
+                "type": "ai_languageModel",
+                "index": 0
+              },
+              {
+                "node": "Extracteur Données personnelles1",
+                "type": "ai_languageModel",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Telecharger CV1": {
+          "main": [
+            [
+              {
+                "node": "Fusion des informations1",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Extracteur d'informations PDF1": {
+          "main": [
+            [
+              {
+                "node": "Qualifications1",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "Extracteur Données personnelles1",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Extracteur Données personnelles1": {
+          "main": [
+            [
+              {
+                "node": "Merge6",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Fusion des informations1": {
+          "main": [
+            [
+              {
+                "node": "Edit Fields",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Merge6": {
+          "main": [
+            [
+              {
+                "node": "Vérifier email candidat",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Filtrer fichiers PDF": {
+          "main": [
+            [
+              {
+                "node": "Séparer pièces jointes",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Séparer pièces jointes": {
+          "main": [
+            [
+              {
+                "node": "Telecharger CV1",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "Extracteur d'informations PDF1",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Nom : Lire toutes les candidatures IMAP": {
+          "main": [
+            [
+              {
+                "node": "Filtrer fichiers PDF",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Vérifier email candidat": {
+          "main": [
+            [
+              {
+                "node": "Fusion des informations1",
+                "type": "main",
+                "index": 1
+              }
+            ]
+          ]
+        },
+        "Edit Fields": {
+          "main": [
+            [
+              {
+                "node": "Google Sheets1",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": {
+        "node:Nom : Lire toutes les candidatures IMAP": {
+          "lastMessageUid": 6919
+        },
+        "node:Google Sheets Trigger": {
+          "documentId": "1CeG9Oya7uLMHvexZYU8osbbLtpxEJnA3jQFbXxGawls",
+          "sheetId": 946817789,
+          "lastIndexChecked": 8
+        }
+      },
+      "meta": null,
+      "pinData": {},
+      "versionId": "01a13759-f785-47e4-bc62-50a0d2d49320",
+      "triggerCount": 1,
+      "tags": []
+    },
+    {
+      "createdAt": "2025-03-13T13:55:59.124Z",
+      "updatedAt": "2025-03-31T14:45:41.000Z",
+      "id": "TNzDMG6SBhnWrQ2L",
+      "name": "Publication linkdin (t)",
+      "active": true,
+      "nodes": [
+        {
+          "parameters": {
+            "modelId": {
+              "__rl": true,
+              "value": "gpt-4o-mini",
+              "mode": "list",
+              "cachedResultName": "GPT-4O-MINI"
+            },
+            "messages": {
+              "values": [
+                {
+                  "content": "={{ $json.Texte }}",
+                  "role": "assistant"
+                }
+              ]
+            },
+            "jsonOutput": true,
+            "options": {}
+          },
+          "type": "@n8n/n8n-nodes-langchain.openAi",
+          "typeVersion": 1.8,
+          "position": [
+            -440,
+            160
+          ],
+          "id": "3742b45d-87ee-4522-aad8-52b0c4eb0cd3",
+          "name": "OpenAI",
+          "credentials": {
+            "openAiApi": {
+              "id": "Cm9Jjcm7pG45Orkj",
+              "name": "OpenAi Brigitte@businessdigital.fr"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "postAs": "organization",
+            "organization": "11038870",
+            "text": "={{ $('If').item.json.Texte }}",
+            "shareMediaCategory": "IMAGE",
+            "binaryPropertyName": "=data",
+            "additionalFields": {}
+          },
+          "type": "n8n-nodes-base.linkedIn",
+          "typeVersion": 1,
+          "position": [
+            260,
+            -40
+          ],
+          "id": "cbe0887b-5f76-45f2-bf29-9128420b8c98",
+          "name": "LinkedIn",
+          "credentials": {
+            "linkedInOAuth2Api": {
+              "id": "J5SkqWkaS8X7R8rp",
+              "name": "LinkedIn account 3"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "assignments": {
+              "assignments": [
+                {
+                  "id": "3cbbe372-f204-4089-ba83-b7f0da80af21",
+                  "name": "={{ $json['message'] }}",
+                  "value": "={{$json[\"message\"][\"content\"]}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "type": "n8n-nodes-base.set",
+          "typeVersion": 3.4,
+          "position": [
+            -120,
+            100
+          ],
+          "id": "ac6b22b5-12ad-4110-b816-9839af3f9642",
+          "name": "Edit Fields"
+        },
+        {
+          "parameters": {
+            "rule": {
+              "interval": [
+                {
+                  "daysInterval": 3
+                }
+              ]
+            }
+          },
+          "type": "n8n-nodes-base.scheduleTrigger",
+          "typeVersion": 1.2,
+          "position": [
+            -1140,
+            -60
+          ],
+          "id": "7e899279-196e-421f-972d-27b6c103ce3a",
+          "name": "Schedule Trigger"
+        },
+        {
+          "parameters": {
+            "url": "={{ $json['Média'] }}",
+            "authentication": "predefinedCredentialType",
+            "nodeCredentialType": "linkedInOAuth2Api",
+            "options": {
+              "response": {
+                "response": {
+                  "responseFormat": "file"
+                }
+              }
+            }
+          },
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [
+            -380,
+            -200
+          ],
+          "id": "29796e34-818c-4ee0-b8ed-1e810a437c73",
+          "name": "HTTP Request",
+          "credentials": {
+            "oAuth2Api": {
+              "id": "BOpuE3kZCRMwqKHw",
+              "name": "MonApp n8n"
+            },
+            "linkedInOAuth2Api": {
+              "id": "J5SkqWkaS8X7R8rp",
+              "name": "LinkedIn account 3"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "documentId": {
+              "__rl": true,
+              "value": "1jSEA8LVe566HkrFuYA7SlhG6Wsb-iVXmW73AZMB5MYw",
+              "mode": "list",
+              "cachedResultName": "Texte du post linkdin",
+              "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jSEA8LVe566HkrFuYA7SlhG6Wsb-iVXmW73AZMB5MYw/edit?usp=drivesdk"
+            },
+            "sheetName": {
+              "__rl": true,
+              "value": 412729090,
+              "mode": "list",
+              "cachedResultName": "linkdiIn",
+              "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jSEA8LVe566HkrFuYA7SlhG6Wsb-iVXmW73AZMB5MYw/edit#gid=412729090"
+            },
+            "options": {}
+          },
+          "type": "n8n-nodes-base.googleSheets",
+          "typeVersion": 4.5,
+          "position": [
+            -860,
+            -20
+          ],
+          "id": "552750d5-a860-4cea-b74b-3d48062598b2",
+          "name": "Google Sheets1",
+          "credentials": {
+            "googleSheetsOAuth2Api": {
+              "id": "dYsZj2HYu0XE5xGm",
+              "name": "amahamat@businessdigital.fr"
+            }
+          }
+        },
+        {
+          "parameters": {},
+          "type": "n8n-nodes-base.merge",
+          "typeVersion": 3,
+          "position": [
+            60,
+            -80
+          ],
+          "id": "f6481ddf-b3b7-471e-a9fa-9afac734ea00",
+          "name": "Merge1"
+        },
+        {
+          "parameters": {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "loose",
+                "version": 2
+              },
+              "conditions": [
+                {
+                  "id": "68f66bd3-33cd-4c5f-bdc8-ca3b8c984a77",
+                  "leftValue": "={{ $json.Mois }}",
+                  "rightValue": "={{ $('Schedule Trigger').item.json.Month }}",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals",
+                    "name": "filter.operator.equals"
+                  }
+                },
+                {
+                  "id": "695f1db0-1b63-42a5-8475-013a9880c603",
+                  "leftValue": "={{ $json.jour }}",
+                  "rightValue": "={{ $('Schedule Trigger').item.json['Day of month'] }}",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals",
+                    "name": "filter.operator.equals"
+                  }
+                },
+                {
+                  "id": "86653f46-173f-4230-ba71-771e34e45878",
+                  "leftValue": "={{ $json.annee }}",
+                  "rightValue": "={{ $('Schedule Trigger').item.json.Year }}",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals",
+                    "name": "filter.operator.equals"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "looseTypeValidation": true,
+            "options": {}
+          },
+          "type": "n8n-nodes-base.if",
+          "typeVersion": 2.2,
+          "position": [
+            -700,
+            -20
+          ],
+          "id": "985f39e0-c51e-4a40-9aa7-b1fc597998b9",
+          "name": "If"
+        },
+        {
+          "parameters": {
+            "url": "={{ $json['Média'] }}",
+            "authentication": "predefinedCredentialType",
+            "nodeCredentialType": "linkedInOAuth2Api",
+            "options": {
+              "response": {
+                "response": {
+                  "responseFormat": "file"
+                }
+              }
+            }
+          },
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [
+            -160,
+            -280
+          ],
+          "id": "b1d63f55-4e9a-4d01-a13f-570efc82e387",
+          "name": "HTTP Request1",
+          "credentials": {
+            "oAuth2Api": {
+              "id": "BOpuE3kZCRMwqKHw",
+              "name": "MonApp n8n"
+            },
+            "linkedInOAuth2Api": {
+              "id": "J5SkqWkaS8X7R8rp",
+              "name": "LinkedIn account 3"
+            }
+          }
+        }
+      ],
+      "connections": {
+        "OpenAI": {
+          "main": [
+            [
+              {
+                "node": "Edit Fields",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Edit Fields": {
+          "main": [
+            [
+              {
+                "node": "Merge1",
+                "type": "main",
+                "index": 1
+              }
+            ]
+          ]
+        },
+        "Schedule Trigger": {
+          "main": [
+            [
+              {
+                "node": "Google Sheets1",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "HTTP Request": {
+          "main": [
+            [
+              {
+                "node": "Merge1",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Google Sheets1": {
+          "main": [
+            [
+              {
+                "node": "If",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Merge1": {
+          "main": [
+            [
+              {
+                "node": "LinkedIn",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "If": {
+          "main": [
+            [
+              {
+                "node": "OpenAI",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "HTTP Request",
+                "type": "main",
+                "index": 0
+              }
+            ],
+            [
+              {
+                "node": "HTTP Request",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "OpenAI",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": {
+        "node:Schedule Trigger": {
+          "recurrenceRules": [
+            123
+          ]
+        }
+      },
+      "meta": {
+        "templateCredsSetupCompleted": true
+      },
+      "pinData": {},
+      "versionId": "6f4e4a38-a456-40e4-a524-4e0de1b3374b",
+      "triggerCount": 1,
+      "tags": []
+    },
+    {
+      "createdAt": "2025-03-28T10:47:52.837Z",
+      "updatedAt": "2025-03-28T19:28:28.000Z",
+      "id": "eBZnfvoV8SecpXNZ",
+      "name": "Workflow d'automatisation des relences des messages",
+      "active": true,
+      "nodes": [
+        {
+          "parameters": {
+            "formTitle": "Formulaire test",
+            "formDescription": "C'est un formulaire ",
+            "formFields": {
+              "values": [
+                {
+                  "fieldLabel": "Nom",
+                  "requiredField": true
+                },
+                {
+                  "fieldLabel": "Prenom",
+                  "requiredField": true
+                },
+                {
+                  "fieldLabel": "Numero",
+                  "fieldType": "number",
+                  "requiredField": true
+                },
+                {
+                  "fieldLabel": "Email",
+                  "fieldType": "email",
+                  "requiredField": true
+                }
+              ]
+            },
+            "options": {}
+          },
+          "type": "n8n-nodes-base.formTrigger",
+          "typeVersion": 2.2,
+          "position": [
+            -540,
+            -100
+          ],
+          "id": "ed8c6219-c45e-4a5e-8692-04e426e29506",
+          "name": "On form submission",
+          "webhookId": "2d53b538-11e8-4108-8c33-02fa3616f844"
+        },
+        {
+          "parameters": {
+            "sendTo": "={{$json[\"Email\"]}}",
+            "subject": "Bienvenue !!!!",
+            "emailType": "text",
+            "message": "=Bonjour {{$json[\"Prenom\"]}},\nJe m'appelle Bastien, je suis venu vers toi pour \nte dire, bienvenue àprés ta demende de demo.\nSi t'est toujours interéssé merci de répondre.\nBien cordialement,\nBastien",
+            "options": {}
+          },
+          "type": "n8n-nodes-base.gmail",
+          "typeVersion": 2.1,
+          "position": [
+            -320,
+            -100
+          ],
+          "id": "bb87624b-556b-4652-934c-19fbd8d043bf",
+          "name": "Gmail de Bienvenue",
+          "webhookId": "93bff868-01fa-4ed9-8300-fc7003919775",
+          "credentials": {
+            "gmailOAuth2": {
+              "id": "moWVnUVbLD3D8t2b",
+              "name": "amahamat@businessdigital.fr"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "operation": "send",
+            "phoneNumberId": "589732764229553",
+            "recipientPhoneNumber": "=+{{ $('On form submission').item.json.Numero }}",
+            "textBody": "=Hello {{ $('On form submission').item.json.Prenom }}, avez-vous eu le temps de consulter notre email ? Nous sommes disponibles pour toute question !",
+            "additionalFields": {}
+          },
+          "type": "n8n-nodes-base.whatsApp",
+          "typeVersion": 1,
+          "position": [
+            60,
+            -100
+          ],
+          "id": "84da061d-5995-4e06-a3e2-9a135276b046",
+          "name": "Message WhatsApp de relence",
+          "webhookId": "bfbc23da-6cf0-4162-af8f-28a78edb1f73",
+          "credentials": {
+            "whatsAppApi": {
+              "id": "fcH3yB2jrW9MAYL8",
+              "name": "WhatsApp account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "amount": 3,
+            "unit": "days"
+          },
+          "type": "n8n-nodes-base.wait",
+          "typeVersion": 1.1,
+          "position": [
+            -120,
+            -100
+          ],
+          "id": "e2ac2e90-bfb7-4781-8179-a836b71bcad0",
+          "name": "Wait 3jours et relencer",
+          "webhookId": "c49ed0fd-99bd-4633-bc0c-ee018ea214c9"
+        },
+        {
+          "parameters": {
+            "amount": 4,
+            "unit": "days"
+          },
+          "type": "n8n-nodes-base.wait",
+          "typeVersion": 1.1,
+          "position": [
+            260,
+            -100
+          ],
+          "id": "dd08dd14-eba6-4dca-af3c-e8d8b7c8b5a0",
+          "name": "wait jour 7",
+          "webhookId": "6ae64db9-24f2-4295-8d24-32695db7a41f"
+        },
+        {
+          "parameters": {
+            "operation": "send",
+            "phoneNumberId": "589732764229553",
+            "recipientPhoneNumber": "=+{{ $('On form submission').item.json.Numero }}",
+            "textBody": "=Hello {{ $('On form submission').item.json.Prenom }}, avez-vous eu le temps de consulter notre email ? Nous sommes disponibles pour toute question !",
+            "additionalFields": {}
+          },
+          "type": "n8n-nodes-base.whatsApp",
+          "typeVersion": 1,
+          "position": [
+            480,
+            -80
+          ],
+          "id": "22db1194-ce4c-431e-b932-79738cc59d9d",
+          "name": "Message WhatsApp d'offre spéciale",
+          "webhookId": "bfbc23da-6cf0-4162-af8f-28a78edb1f73",
+          "credentials": {
+            "whatsAppApi": {
+              "id": "fcH3yB2jrW9MAYL8",
+              "name": "WhatsApp account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "sendTo": "={{ $('On form submission').item.json.Email }}",
+            "subject": "Offre Speciale !!!",
+            "message": "={{ $('On form submission').item.json.Prenom }}, notre offre exclusive pour vous prend fin demain ! Profitez-en maintenant en cliquant ici : [lien].",
+            "options": {}
+          },
+          "type": "n8n-nodes-base.gmail",
+          "typeVersion": 2.1,
+          "position": [
+            500,
+            -260
+          ],
+          "id": "5f832cf6-4b0b-4404-a5ed-bae4e8b8496e",
+          "name": "Gmail offre spéciale",
+          "webhookId": "7745e870-d353-4791-b3b9-a003b14ac9db",
+          "credentials": {
+            "gmailOAuth2": {
+              "id": "moWVnUVbLD3D8t2b",
+              "name": "amahamat@businessdigital.fr"
+            }
+          }
+        },
+        {
+          "parameters": {},
+          "type": "n8n-nodes-base.merge",
+          "typeVersion": 3,
+          "position": [
+            700,
+            -80
+          ],
+          "id": "fee26ed8-659a-4a3d-b20f-68d99d86bd97",
+          "name": "Merge"
+        },
+        {
+          "parameters": {
+            "amount": 7,
+            "unit": "days"
+          },
+          "type": "n8n-nodes-base.wait",
+          "typeVersion": 1.1,
+          "position": [
+            1220,
+            -100
+          ],
+          "id": "9f7ca612-2444-4f7b-87c7-a2da294be1cc",
+          "name": "Wait jour 14",
+          "webhookId": "c49ed0fd-99bd-4633-bc0c-ee018ea214c9"
+        },
+        {
+          "parameters": {
+            "operation": "send",
+            "phoneNumberId": "589732764229553",
+            "recipientPhoneNumber": "=+{{ $('On form submission').item.json.Numero }}",
+            "textBody": "=Hello {{ $('On form submission').item.json.Prenom }}, avez-vous eu le temps de consulter notre email ? Nous sommes disponibles pour toute question !",
+            "additionalFields": {}
+          },
+          "type": "n8n-nodes-base.whatsApp",
+          "typeVersion": 1,
+          "position": [
+            1400,
+            20
+          ],
+          "id": "9db4a780-4767-4a86-af31-0e2f92aecfa2",
+          "name": "Message WhatsApp d'offre spéciale1",
+          "webhookId": "bfbc23da-6cf0-4162-af8f-28a78edb1f73",
+          "credentials": {
+            "whatsAppApi": {
+              "id": "fcH3yB2jrW9MAYL8",
+              "name": "WhatsApp account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "sendTo": "={{ $('On form submission').item.json.Email }}",
+            "subject": "proposition de rendez-vous !!!",
+            "message": "={{ $('On form submission').item.json.Prenom }}, nous aimerions discuter de vos besoins. Réservez un créneau ici : [lien].\"",
+            "options": {}
+          },
+          "type": "n8n-nodes-base.gmail",
+          "typeVersion": 2.1,
+          "position": [
+            1400,
+            -220
+          ],
+          "id": "02753506-6407-412a-9c5a-734e5c20d673",
+          "name": "Gmail offre spéciale1",
+          "webhookId": "7745e870-d353-4791-b3b9-a003b14ac9db",
+          "credentials": {
+            "gmailOAuth2": {
+              "id": "moWVnUVbLD3D8t2b",
+              "name": "amahamat@businessdigital.fr"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "operation": "append",
+            "documentId": {
+              "__rl": true,
+              "value": "1KIhqixsdQBg0xs2cjri7rifFR8_0MnEOKSMuoTNkMyo",
+              "mode": "list",
+              "cachedResultName": "formulaire",
+              "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KIhqixsdQBg0xs2cjri7rifFR8_0MnEOKSMuoTNkMyo/edit?usp=drivesdk"
+            },
+            "sheetName": {
+              "__rl": true,
+              "value": 1162244190,
+              "mode": "list",
+              "cachedResultName": "My new form",
+              "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KIhqixsdQBg0xs2cjri7rifFR8_0MnEOKSMuoTNkMyo/edit#gid=1162244190"
+            },
+            "columns": {
+              "mappingMode": "defineBelow",
+              "value": {
+                "Nom": "={{ $('On form submission').item.json.Nom }}",
+                "Email": "={{ $('On form submission').item.json.Email }}",
+                "Numero": "={{ $('On form submission').item.json.Numero }}",
+                "Prenom": "={{ $('On form submission').item.json.Prenom }}"
+              },
+              "matchingColumns": [],
+              "schema": [
+                {
+                  "id": "Nom",
+                  "displayName": "Nom",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Prenom",
+                  "displayName": "Prenom",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Numero",
+                  "displayName": "Numero",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Email",
+                  "displayName": "Email",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                }
+              ],
+              "attemptToConvertTypes": false,
+              "convertFieldsToString": false
+            },
+            "options": {}
+          },
+          "type": "n8n-nodes-base.googleSheets",
+          "typeVersion": 4.5,
+          "position": [
+            480,
+            -440
+          ],
+          "id": "bae3eed7-28a0-4d15-a29a-5d213abebfc4",
+          "name": "Google Sheets",
+          "credentials": {
+            "googleSheetsOAuth2Api": {
+              "id": "dYsZj2HYu0XE5xGm",
+              "name": "amahamat@businessdigital.fr"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "loose",
+                "version": 2
+              },
+              "conditions": [
+                {
+                  "id": "25a045bb-c11f-4e1a-8296-50fa82016c0e",
+                  "leftValue": "={{ $json.Nom }}",
+                  "rightValue": "={{ $('On form submission').item.json.Nom }}",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals"
+                  }
+                },
+                {
+                  "id": "c1546e5f-c905-4e40-bd7e-64e94a1e4e4c",
+                  "leftValue": "={{ $json.Prenom }}",
+                  "rightValue": "={{ $('On form submission').item.json.Prenom }}",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals",
+                    "name": "filter.operator.equals"
+                  }
+                },
+                {
+                  "id": "70c90d1b-6a8f-4863-8394-879a4e7f36b8",
+                  "leftValue": "={{ $json.Numero }}",
+                  "rightValue": "={{ $('On form submission').item.json.Numero }}",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals",
+                    "name": "filter.operator.equals"
+                  }
+                },
+                {
+                  "id": "9cd227b4-f0ed-417d-ac1b-1a13dd442ac0",
+                  "leftValue": "={{ $json.Email }}",
+                  "rightValue": "={{ $('On form submission').item.json.Email }}",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals",
+                    "name": "filter.operator.equals"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "looseTypeValidation": true,
+            "options": {}
+          },
+          "type": "n8n-nodes-base.if",
+          "typeVersion": 2.2,
+          "position": [
+            960,
+            -80
+          ],
+          "id": "2f88affc-a2d1-4e1e-a9c2-6bb6661b6f3b",
+          "name": "If"
+        },
+        {
+          "parameters": {
+            "documentId": {
+              "__rl": true,
+              "value": "1KIhqixsdQBg0xs2cjri7rifFR8_0MnEOKSMuoTNkMyo",
+              "mode": "list",
+              "cachedResultName": "formulaire",
+              "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KIhqixsdQBg0xs2cjri7rifFR8_0MnEOKSMuoTNkMyo/edit?usp=drivesdk"
+            },
+            "sheetName": {
+              "__rl": true,
+              "value": 1162244190,
+              "mode": "list",
+              "cachedResultName": "My new form",
+              "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KIhqixsdQBg0xs2cjri7rifFR8_0MnEOKSMuoTNkMyo/edit#gid=1162244190"
+            },
+            "options": {}
+          },
+          "type": "n8n-nodes-base.googleSheets",
+          "typeVersion": 4.5,
+          "position": [
+            500,
+            160
+          ],
+          "id": "6974abe0-ad65-4e9c-be02-124b4e8f92f8",
+          "name": "Google Sheets1",
+          "credentials": {
+            "googleSheetsOAuth2Api": {
+              "id": "dYsZj2HYu0XE5xGm",
+              "name": "amahamat@businessdigital.fr"
+            }
+          }
+        }
+      ],
+      "connections": {
+        "On form submission": {
+          "main": [
+            [
+              {
+                "node": "Gmail de Bienvenue",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Gmail de Bienvenue": {
+          "main": [
+            [
+              {
+                "node": "Wait 3jours et relencer",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Wait 3jours et relencer": {
+          "main": [
+            [
+              {
+                "node": "Message WhatsApp de relence",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Message WhatsApp de relence": {
+          "main": [
+            [
+              {
+                "node": "wait jour 7",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "wait jour 7": {
+          "main": [
+            [
+              {
+                "node": "Gmail offre spéciale",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "Message WhatsApp d'offre spéciale",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "Google Sheets",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "Google Sheets1",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Gmail offre spéciale": {
+          "main": [
+            [
+              {
+                "node": "Merge",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Message WhatsApp d'offre spéciale": {
+          "main": [
+            [
+              {
+                "node": "Merge",
+                "type": "main",
+                "index": 1
+              }
+            ]
+          ]
+        },
+        "Merge": {
+          "main": [
+            [
+              {
+                "node": "If",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Wait jour 14": {
+          "main": [
+            [
+              {
+                "node": "Gmail offre spéciale1",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "Message WhatsApp d'offre spéciale1",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "If": {
+          "main": [
+            [
+              {
+                "node": "Wait jour 14",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Google Sheets": {
+          "main": [
+            []
+          ]
+        },
+        "Google Sheets1": {
+          "main": [
+            [
+              {
+                "node": "If",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": null,
+      "meta": {
+        "templateCredsSetupCompleted": true
+      },
+      "pinData": {},
+      "versionId": "30b9e76e-dc9c-4cce-a290-8be3a928f1de",
+      "triggerCount": 2,
+      "tags": []
+    },
+    {
+      "createdAt": "2025-03-26T08:27:22.536Z",
+      "updatedAt": "2025-03-26T08:44:16.000Z",
+      "id": "g6p5833tJVnVjVTW",
+      "name": "✅ Recrutement d'alternants mails candidatures par mail, JobDoe",
+      "active": true,
+      "nodes": [
+        {
+          "parameters": {
+            "downloadAttachments": true,
+            "options": {
+              "customEmailConfig": "=[\n  [\"TEXT\", \"Candidature\"]\n]"
+            }
+          },
+          "type": "n8n-nodes-base.emailReadImap",
+          "typeVersion": 2,
+          "position": [
+            -1100,
+            1840
+          ],
+          "id": "891bc342-f3bc-4272-8e41-52204217b652",
+          "name": "Récupération candidatures reçues par mail",
+          "credentials": {
+            "imap": {
+              "id": "qQwCtztnAwSWLe8W",
+              "name": "IMAP formation@businessdigital.fr"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "downloadAttachments": true,
+            "options": {
+              "customEmailConfig": "=[\n  [\"TEXT\", \"job-doe.fr\"]\n]"
+            }
+          },
+          "type": "n8n-nodes-base.emailReadImap",
+          "typeVersion": 2,
+          "position": [
+            -1100,
+            2060
+          ],
+          "id": "7b32a4a2-063f-4d27-8107-562ed5136ce5",
+          "name": "Récupération candidatures Jobdoe",
+          "credentials": {
+            "imap": {
+              "id": "qQwCtztnAwSWLe8W",
+              "name": "IMAP formation@businessdigital.fr"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "text": "={{ $json.text }}",
+            "attributes": {
+              "attributes": [
+                {
+                  "name": "Etudes",
+                  "description": "Summary of your academic career. Focus on your high school and university studies. Summarize in 100 words maximum and also include your grade if applicable.",
+                  "required": true
+                },
+                {
+                  "name": "Expériences",
+                  "description": "Work history summary. Focus on your most recent work experiences. Summarize in 100 words maximum",
+                  "required": true
+                },
+                {
+                  "name": "Compétences",
+                  "description": "Extract the candidate’s technical skills. What software and frameworks they are proficient in. Make a bulleted list.",
+                  "required": true
+                }
+              ]
+            },
+            "options": {
+              "systemPromptTemplate": "You are an expert extraction algorithm.\nOnly extract relevant information from the text.\nIf you do not know the value of an attribute asked to extract, you may omit the attribute's value."
+            }
+          },
+          "id": "200a255f-af41-485b-b05d-cb8c81937b4b",
+          "name": "Qualifications2",
+          "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+          "position": [
+            20,
+            2320
+          ],
+          "typeVersion": 1
+        },
+        {
+          "parameters": {
+            "model": {
+              "__rl": true,
+              "mode": "list",
+              "value": "gpt-4o-mini"
+            },
+            "options": {}
+          },
+          "id": "70a41cf9-3938-4e57-af4c-048df63b5a8a",
+          "name": "OpenAI2",
+          "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+          "position": [
+            960,
+            2660
+          ],
+          "typeVersion": 1.2,
+          "credentials": {
+            "openAiApi": {
+              "id": "Cm9Jjcm7pG45Orkj",
+              "name": "OpenAi Brigitte@businessdigital.fr"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "inputDataFieldName": "attachment_0",
+            "name": "=CV-{{ $now.format('yyyyLLdd') }}",
+            "driveId": {
+              "__rl": true,
+              "value": "1DyAIcFR-yW55t_FVOOFhymf1fjAdMf28",
+              "mode": "id"
+            },
+            "folderId": {
+              "__rl": true,
+              "value": "1DyAIcFR-yW55t_FVOOFhymf1fjAdMf28",
+              "mode": "id"
+            },
+            "options": {}
+          },
+          "id": "ac0c3209-9711-4e5d-8c36-9da9e342d7d6",
+          "name": "Telecharger CV2",
+          "type": "n8n-nodes-base.googleDrive",
+          "position": [
+            -360,
+            1820
+          ],
+          "typeVersion": 3,
+          "credentials": {
+            "googleDriveOAuth2Api": {
+              "id": "we12XBUnbWFxGLAu",
+              "name": "Google Drive cathya@businessdigital.fr"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "operation": "pdf",
+            "binaryPropertyName": "=attachment_0",
+            "options": {}
+          },
+          "id": "d4344440-3e58-4e12-92af-8584c8117554",
+          "name": "Extracteur d'informations PDF2",
+          "type": "n8n-nodes-base.extractFromFile",
+          "position": [
+            -360,
+            2020
+          ],
+          "typeVersion": 1,
+          "alwaysOutputData": true
+        },
+        {
+          "parameters": {
+            "text": "={{ $json.text }}",
+            "schemaType": "manual",
+            "inputSchema": "{\n  \"name\": \"Florian Bounon\",\n  \"jobTitle\": \"Développeur\",\n  \"email\": \"florian.bounon@gmail.com\",\n  \"telephone\": \"0785593267\",\n  \"city\": \"Andresy\",\n  \"birthdate\": \"2004-11-14\"\n}",
+            "options": {
+              "systemPromptTemplate": "You are an expert extraction algorithm.\nOnly extract relevant information from the text.\nIf you do not know the value of an attribute asked to extract, you may omit the attribute's value."
+            }
+          },
+          "id": "a4eda679-f55e-46a6-adcf-b1005090efb6",
+          "name": "Extracteur Données personnelles2",
+          "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+          "position": [
+            20,
+            2040
+          ],
+          "typeVersion": 1
+        },
+        {
+          "parameters": {
+            "mode": "combine",
+            "combineBy": "combineAll",
+            "options": {}
+          },
+          "id": "166139d3-2e0c-4ad9-97ec-c48c802c23ea",
+          "name": "Fusion des informations2",
+          "type": "n8n-nodes-base.merge",
+          "position": [
+            880,
+            1960
+          ],
+          "typeVersion": 3,
+          "executeOnce": true
+        },
+        {
+          "parameters": {
+            "operation": "append",
+            "documentId": {
+              "__rl": true,
+              "value": "1CeG9Oya7uLMHvexZYU8osbbLtpxEJnA3jQFbXxGawls",
+              "mode": "list",
+              "cachedResultName": "Liste de candidats bruts",
+              "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CeG9Oya7uLMHvexZYU8osbbLtpxEJnA3jQFbXxGawls/edit?usp=drivesdk"
+            },
+            "sheetName": {
+              "__rl": true,
+              "value": 946817789,
+              "mode": "list",
+              "cachedResultName": "Mails",
+              "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CeG9Oya7uLMHvexZYU8osbbLtpxEJnA3jQFbXxGawls/edit#gid=946817789"
+            },
+            "columns": {
+              "mappingMode": "defineBelow",
+              "value": {
+                "Nom": "=",
+                "Titre du profil": "={{ $json.output['Expérience professionnelle'][0].Poste }}",
+                "Email": "={{ $json.output.Email }}",
+                "Téléphone": "={{ $json.output['Téléphone'] }}",
+                "LienCV": "={{ $json.webViewLink }}",
+                "Source": "=Mail",
+                "LienProfil": "={{ $json.webViewLink }}",
+                "Ville": "={{ $json.output.Adresse }}",
+                "Date de naissance": "={{ $json.output['Date de naissance'] }}",
+                "Etudes": "={{ $json.output.Etudes }}",
+                "Expériences": "={{ $json.output['Expériences'] }}",
+                "Compétences": "={{ $json.output['Compétences'] }}"
+              },
+              "matchingColumns": [],
+              "schema": [
+                {
+                  "id": "Nom",
+                  "displayName": "Nom",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Titre du profil",
+                  "displayName": "Titre du profil",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Email",
+                  "displayName": "Email",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Téléphone",
+                  "displayName": "Téléphone",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "LienCV",
+                  "displayName": "LienCV",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Source",
+                  "displayName": "Source",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "LienProfil",
+                  "displayName": "LienProfil",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Ville",
+                  "displayName": "Ville",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Date de naissance",
+                  "displayName": "Date de naissance",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Etudes",
+                  "displayName": "Etudes",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Expériences",
+                  "displayName": "Expériences",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Compétences",
+                  "displayName": "Compétences",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                }
+              ],
+              "attemptToConvertTypes": false,
+              "convertFieldsToString": false
+            },
+            "options": {}
+          },
+          "type": "n8n-nodes-base.googleSheets",
+          "typeVersion": 4.5,
+          "position": [
+            1220,
+            1960
+          ],
+          "id": "5cfaa73b-8bc0-4c6d-a10e-0b8b2c481260",
+          "name": "Google Sheets2",
+          "credentials": {
+            "googleSheetsOAuth2Api": {
+              "id": "JrQt8saJPmBb8xRc",
+              "name": "Google Sheets formation@businessdigital.fr"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "mode": "combine",
+            "combineBy": "combineAll",
+            "options": {}
+          },
+          "type": "n8n-nodes-base.merge",
+          "typeVersion": 3,
+          "position": [
+            -780,
+            1980
+          ],
+          "id": "a568eb92-42dc-4288-9de6-bb0c221686f0",
+          "name": "Merge"
+        },
+        {
+          "parameters": {
+            "mode": "combine",
+            "combineBy": "combineAll",
+            "options": {}
+          },
+          "type": "n8n-nodes-base.merge",
+          "typeVersion": 3,
+          "position": [
+            560,
+            2040
+          ],
+          "id": "7bc89fcc-1846-4c1e-bbaf-d75775993caf",
+          "name": "Merge8"
+        }
+      ],
+      "connections": {
+        "Récupération candidatures reçues par mail": {
+          "main": [
+            [
+              {
+                "node": "Merge",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Récupération candidatures Jobdoe": {
+          "main": [
+            [
+              {
+                "node": "Merge",
+                "type": "main",
+                "index": 1
+              }
+            ]
+          ]
+        },
+        "Qualifications2": {
+          "main": [
+            [
+              {
+                "node": "Merge8",
+                "type": "main",
+                "index": 1
+              }
+            ]
+          ]
+        },
+        "OpenAI2": {
+          "ai_languageModel": [
+            [
+              {
+                "node": "Qualifications2",
+                "type": "ai_languageModel",
+                "index": 0
+              },
+              {
+                "node": "Extracteur Données personnelles2",
+                "type": "ai_languageModel",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Telecharger CV2": {
+          "main": [
+            [
+              {
+                "node": "Google Sheets2",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Extracteur d'informations PDF2": {
+          "main": [
+            [
+              {
+                "node": "Qualifications2",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "Extracteur Données personnelles2",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Extracteur Données personnelles2": {
+          "main": [
+            [
+              {
+                "node": "Merge8",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Fusion des informations2": {
+          "main": [
+            [
+              {
+                "node": "Google Sheets2",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Merge": {
+          "main": [
+            [
+              {
+                "node": "Telecharger CV2",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "Extracteur d'informations PDF2",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Merge8": {
+          "main": [
+            [
+              {
+                "node": "Fusion des informations2",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": {
+        "node:Trigger - Tous les jours": {
+          "recurrenceRules": []
+        },
+        "node:Récupération candidatures la bonne alternance": {
+          "lastMessageUid": 71322
+        },
+        "node:Récupération candidatures reçues par mail": {
+          "lastMessageUid": 74728
+        },
+        "node:Récupération candidatures Jobdoe": {
+          "lastMessageUid": 74630
+        },
+        "node:Récupération candidatures leboncoin": {},
+        "node:Récupération candidatures lesentreprises-sengagent.gouv.fr": {},
+        "node:Récupération candidatures WeRecruit": {},
+        "node:Récupération candidatures France Travail": {
+          "lastMessageUid": 71328
+        },
+        "node:Google Sheets Trigger": {
+          "documentId": "1CeG9Oya7uLMHvexZYU8osbbLtpxEJnA3jQFbXxGawls",
+          "sheetId": 946817789,
+          "lastIndexChecked": 2
+        }
+      },
+      "meta": {
+        "templateCredsSetupCompleted": true
+      },
+      "pinData": {},
+      "versionId": "081fdec8-c4ba-44b9-a6c2-491263e8354c",
+      "triggerCount": 2,
+      "tags": [
+        {
+          "createdAt": "2025-03-26T08:16:44.368Z",
+          "updatedAt": "2025-03-26T08:16:44.368Z",
+          "id": "VGIUxvowmXbUmtJa",
+          "name": "Recrutement"
+        }
+      ]
+    },
+    {
+      "createdAt": "2025-03-10T08:39:26.359Z",
+      "updatedAt": "2025-03-20T14:03:58.000Z",
+      "id": "lFN9GhG87rXXmR4z",
+      "name": "Création page",
+      "active": true,
+      "nodes": [
+        {
+          "parameters": {
+            "url": "https://systeme.io/api/dashboard/customer/user-domains",
+            "allowUnauthorizedCerts": true,
+            "responseFormat": "string",
+            "jsonParameters": true,
+            "options": {},
+            "headerParametersJson": "{\n  \"Authorization\": \"Bearer vbai5mq2c9j6lzk0qj3nfzqytydwiilpn0oc3mtm9lieiwhjn0x18l0irnz29kan\",\n  \"Content-Type\": \"application/json\"\n}",
+            "queryParametersJson": "{\n  \"template_id\": \"5255047\",\n  \"domain\": \"businessdigital.fr\"\n}\n"
+          },
+          "name": "Installer Template SIO",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 1,
+          "position": [
+            -600,
+            140
+          ],
+          "id": "b16d773c-ba85-4238-889d-10983e534db7"
+        },
+        {
+          "parameters": {
+            "url": "https://systeme.io/api/dashboard/customer/funnels/5255047/steps/list",
+            "allowUnauthorizedCerts": true,
+            "responseFormat": "string",
+            "options": {},
+            "headerParametersUi": {
+              "parameter": [
+                {
+                  "name": "Authorization",
+                  "value": "Bearer vbai5mq2c9j6lzk0qj3nfzqytydwiilpn0oc3mtm9lieiwhjn0x18l0irnz29kan"
+                },
+                {
+                  "name": "Content-Type",
+                  "value": "application/json "
+                }
+              ]
+            }
+          },
+          "name": "Assigner Template au Domaine",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 1,
+          "position": [
+            -400,
+            140
+          ],
+          "id": "342db046-30b4-4b70-9846-f38b5fbb8359"
+        },
+        {
+          "parameters": {
+            "url": "https://systeme.io/dashboard/editor/api/page/27293588/edit",
+            "allowUnauthorizedCerts": true,
+            "responseFormat": "string",
+            "options": {},
+            "headerParametersUi": {
+              "parameter": [
+                {
+                  "name": "Authorization",
+                  "value": "Bearer vbai5mq2c9j6lzk0qj3nfzqytydwiilpn0oc3mtm9lieiwhjn0x18l0irnz29kan"
+                },
+                {
+                  "name": "Content-Type",
+                  "value": "application/json"
+                }
+              ]
+            },
+            "queryParametersUi": {
+              "parameter": [
+                {
+                  "name": "menu",
+                  "value": "menu personnalisé"
+                },
+                {
+                  "name": "texte",
+                  "value": "Texte modifié"
+                },
+                {
+                  "name": "form_action",
+                  "value": "enregistrer_contact"
+                },
+                {
+                  "name": "redirection",
+                  "value": "/merci-"
+                },
+                {
+                  "name": "logo",
+                  "value": "https://url-de-votre-logo.com/logo.png"
+                },
+                {
+                  "name": "page_name",
+                  "value": "Nouvelle Page"
+                },
+                {
+                  "name": "page_link",
+                  "value": "/nouvelle-page"
+                }
+              ]
+            }
+          },
+          "name": "Personnalisation du Template",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 1,
+          "position": [
+            380,
+            140
+          ],
+          "id": "fcc12c01-c8cf-40ca-99c2-996a10d07751"
+        },
+        {
+          "parameters": {
+            "url": "https://systeme.io/api/dashboard/customer/page-templates/offer_thank_you_page?pagination[limit]=9",
+            "responseFormat": "string",
+            "jsonParameters": true,
+            "options": {}
+          },
+          "name": "Créer Page /merci-",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 1,
+          "position": [
+            600,
+            140
+          ],
+          "id": "8cd422e2-13ac-409c-a122-5109b7be332b"
+        },
+        {
+          "parameters": {
+            "method": "POST",
+            "url": "https://systeme.io/api/dashboard/funnels/5183278",
+            "sendHeaders": true,
+            "headerParameters": {
+              "parameters": [
+                {
+                  "name": "Authorization",
+                  "value": "Bearer vbai5mq2c9j6lzk0qj3nfzqytydwiilpn0oc3mtm9lieiwhjn0x18l0irnz29kan"
+                },
+                {
+                  "name": "Content-Type",
+                  "value": "application/json"
+                }
+              ]
+            },
+            "sendBody": true,
+            "bodyParameters": {
+              "parameters": [
+                {
+                  "name": "domain",
+                  "value": "businessdigital.fr"
+                },
+                {
+                  "name": "header_code",
+                  "value": "<!-- Google Tag Manager --> <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src= 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f); })(window,document,'script','dataLayer','GTM-TSM69BJ');</script> <!-- End Google Tag Manager -->"
+                },
+                {
+                  "name": "footer_code",
+                  "value": "<!-- Google Tag Manager (noscript) --> <noscript><iframe src=\"https://www.googletagmanager.com/ns.html?id=GTM-TSM69BJ\" height=\"0\" width=\"0\" style=\"display:none;visibility:hidden\"></iframe></noscript> <!-- End Google Tag Manager (noscript) -->"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [
+            620,
+            400
+          ],
+          "id": "9592b546-6b69-4f32-959b-04370915700e",
+          "name": "Ajouter Google Tag Manager"
+        },
+        {
+          "parameters": {
+            "url": "https://systeme.io/dashboard/editor/api/automation/resources/tags",
+            "sendHeaders": true,
+            "headerParameters": {
+              "parameters": [
+                {
+                  "name": "Authorization",
+                  "value": "Bearer vbai5mq2c9j6lzk0qj3nfzqytydwiilpn0oc3mtm9lieiwhjn0x18l0irnz29kan"
+                },
+                {
+                  "name": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "name": "tag_id",
+                  "value": "%7D%5D"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [
+            620,
+            -60
+          ],
+          "id": "b06f205b-f9f4-43e8-ae4c-f32e9950008a",
+          "name": "Ajouter une règle d’automatisation"
+        },
+        {
+          "parameters": {
+            "url": "https://systeme.io/dashboard/funnels/5255047#step17249414/pages/list",
+            "sendHeaders": true,
+            "headerParameters": {
+              "parameters": [
+                {
+                  "name": "Authorization",
+                  "value": "Bearer vbai5mq2c9j6lzk0qj3nfzqytydwiilpn0oc3mtm9lieiwhjn0x18l0irnz29kan"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [
+            -800,
+            140
+          ],
+          "id": "65868c99-9fe9-4502-a74f-85e9c287b07b",
+          "name": "Vérifier connexion SIO"
+        },
+        {
+          "parameters": {
+            "modelId": {
+              "__rl": true,
+              "value": "gpt-4",
+              "mode": "list",
+              "cachedResultName": "GPT-4"
+            },
+            "messages": {
+              "values": [
+                {
+                  "content": "=💡 **Mission :**  \nRédige une page de destination convaincante destinée aux entreprises et professionnels cherchant à recruter des alternants en IA ou à se former à l'intelligence artificielle.  \n\n‼️ **Respecte STRICTEMENT la structure suivante** pour assurer une cohérence parfaite.  \nUtilise des titres accrocheurs, des listes à puces et des appels à l’action clairs.  \nMets les mots clés importants entre `<b>...<b>` en gras.  \n\n---\n\n📌 **Structure attendue :**  \n\n### 🎯 **Titre principal impactant (H1)**  \n- Un titre captivant qui attire immédiatement l’attention.  \n\n### ✨ **Sous-titre convaincant (H2)**  \n- Met en avant un bénéfice clé pour l’entreprise.  \n\n### 📢 **Bloc d’accroche**  \n- Une courte introduction percutante expliquant la valeur ajoutée du programme.  \n\n### ✅ **Avantages clairs (H3 + bullet points)**  \n- **Exemples de points à inclure** :  \n  - 📌 <b>Accès à des talents formés en IA et immédiatement opérationnels<b>  \n  - 🚀 <b>Optimisation des coûts et amélioration de la productivité<b>  \n  - 🎓 <b>Programmes certifiés et financés par l’État<b>  \n  - 🔍 <b>Formation adaptée aux besoins du marché<b>  \n\n### 📚 **Détails du programme / services**  \n- Présente la formation et ses modules ou les atouts des alternants.  \n\n### 👥 **Témoignages et preuves sociales**  \n- Intègre des avis d’entreprises et d’étudiants pour rassurer les visiteurs.  \n\n### 🔥 **Appel à l’action puissant**  \n- Un bouton clair, engageant et orienté conversion. Exemple :  \n  👉 <b>Recrutez un alternant en IA dès aujourd’hui !<b>  \n\n### 📩 **Formulaire de contact optimisé**  \n- Email obligatoire, téléphone facultatif, message facultatif.  \n\n---\n\n🚨 **Instructions spéciales** :  \n- Adopte un ton professionnel et engageant.  \n- Intègre des éléments de preuve sociale (témoignages, certifications, partenariats).  \n- Utilise un langage simple et persuasif orienté conversion.  \n- Garde la structure fluide et dynamique pour maximiser l’impact.  \n\nGénère la page complète en respectant ces consignes.\n"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "type": "@n8n/n8n-nodes-langchain.openAi",
+          "typeVersion": 1.8,
+          "position": [
+            -100,
+            140
+          ],
+          "id": "b46612c4-95c6-41a1-b2d9-4d2dbfb90502",
+          "name": "OpenAI",
+          "credentials": {
+            "openAiApi": {
+              "id": "HYXSzKhuyM8B31Ui",
+              "name": "OpenAi account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "httpMethod": "POST",
+            "path": "8f76efe9-16d0-4982-9b65-82c3d4381a3c",
+            "options": {}
+          },
+          "type": "n8n-nodes-base.webhook",
+          "typeVersion": 2,
+          "position": [
+            -980,
+            140
+          ],
+          "id": "95437ee6-277b-4a10-975b-612cfb3bde4e",
+          "name": "Webhook",
+          "webhookId": "8f76efe9-16d0-4982-9b65-82c3d4381a3c"
+        },
+        {
+          "parameters": {},
+          "type": "n8n-nodes-base.wait",
+          "typeVersion": 1.1,
+          "position": [
+            -240,
+            140
+          ],
+          "id": "25240c71-1818-4430-b145-c5616b718f3e",
+          "name": "Wait",
+          "webhookId": "d078d51a-b34d-4828-889d-b0b819f96ee3"
+        },
+        {
+          "parameters": {
+            "options": {}
+          },
+          "type": "n8n-nodes-base.set",
+          "typeVersion": 3.4,
+          "position": [
+            200,
+            140
+          ],
+          "id": "705efdca-e139-4b3b-82fc-7f1006d09d02",
+          "name": "Edit Fields"
+        }
+      ],
+      "connections": {
+        "Installer Template SIO": {
+          "main": [
+            [
+              {
+                "node": "Assigner Template au Domaine",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Assigner Template au Domaine": {
+          "main": [
+            [
+              {
+                "node": "Wait",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Personnalisation du Template": {
+          "main": [
+            [
+              {
+                "node": "Créer Page /merci-",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "Ajouter une règle d’automatisation",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "Ajouter Google Tag Manager",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Créer Page /merci-": {
+          "main": [
+            []
+          ]
+        },
+        "Ajouter une règle d’automatisation": {
+          "main": [
+            []
+          ]
+        },
+        "Vérifier connexion SIO": {
+          "main": [
+            [
+              {
+                "node": "Installer Template SIO",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "OpenAI": {
+          "main": [
+            [
+              {
+                "node": "Edit Fields",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Webhook": {
+          "main": [
+            [
+              {
+                "node": "Vérifier connexion SIO",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Wait": {
+          "main": [
+            [
+              {
+                "node": "OpenAI",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Edit Fields": {
+          "main": [
+            [
+              {
+                "node": "Personnalisation du Template",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1",
+        "callerPolicy": "workflowsFromSameOwner",
+        "errorWorkflow": "lFN9GhG87rXXmR4z"
+      },
+      "staticData": {
+        "node:Schedule Trigger": {
+          "recurrenceRules": []
+        }
+      },
+      "meta": null,
+      "pinData": {
+        "Webhook": [
+          {
+            "json": {
+              "name": "First item",
+              "code": 1
+            }
+          },
+          {
+            "json": {
+              "name": "Second item",
+              "code": 2
+            }
+          }
+        ]
+      },
+      "versionId": "efb4dedd-1ada-49dd-9444-ac937efa1781",
+      "triggerCount": 1,
+      "tags": []
+    },
+    {
+      "createdAt": "2025-03-26T09:58:29.679Z",
+      "updatedAt": "2025-04-07T18:10:34.000Z",
+      "id": "rGstCRZdXndZOAwp",
+      "name": "✅ Recrutement alternants - recherche google LKDN",
+      "active": true,
+      "nodes": [
+        {
+          "parameters": {
+            "rule": {
+              "interval": [
+                {
+                  "field": "hours",
+                  "hoursInterval": 4
+                }
+              ]
+            }
+          },
+          "name": "Trigger - Tous les jours",
+          "type": "n8n-nodes-base.scheduleTrigger",
+          "typeVersion": 1,
+          "position": [
+            -240,
+            0
+          ],
+          "id": "acf7b630-0116-492f-844a-5325885a8a90"
+        },
+        {
+          "parameters": {
+            "functionCode": "const jobTitle = $json.jobTitle || \"\";\nconst industry = $json.industry || \"\";\nconst location = $json.location || \"\";\nconst searchQuery = `site:linkedin.com/in/ ${jobTitle} ${industry} ${location}`;\nreturn [{ json: { query: searchQuery } }];"
+          },
+          "name": "Générer Requête Google",
+          "type": "n8n-nodes-base.function",
+          "typeVersion": 1,
+          "position": [
+            220,
+            0
+          ],
+          "id": "c2c5cd5f-9e06-42b8-ab28-c505594499c7"
+        },
+        {
+          "parameters": {
+            "url": "https://www.googleapis.com/customsearch/v1",
+            "options": {},
+            "queryParametersUi": {
+              "parameter": [
+                {
+                  "name": "q",
+                  "value": "={{ $json.query }}"
+                },
+                {
+                  "name": "cx",
+                  "value": "d1e6d238287894170"
+                },
+                {
+                  "name": "key",
+                  "value": "AIzaSyDVMpfO4rvOBIt-YMEmj2SO9ElL7RUizdc"
+                },
+                {
+                  "name": "num",
+                  "value": "10"
+                },
+                {
+                  "name": "hl",
+                  "value": "fr"
+                },
+                {
+                  "name": "safe",
+                  "value": "off"
+                }
+              ]
+            }
+          },
+          "name": "Recherche Google API",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 1,
+          "position": [
+            440,
+            0
+          ],
+          "id": "94bd4063-2a34-41cc-8693-d4d465b8332b"
+        },
+        {
+          "parameters": {
+            "functionCode": "const results = $json.items || [];\n\nreturn results.map(item => {\n  const title = item.title || \"\";\n  const parts = title.split(\" - \");\n\n  const nom = parts[0]?.trim() || \"\"; // extrait juste le nom\n  const titreProfil = title;          // garde tout le titre original\n\n  return {\n    json: {\n      \"Nom\": nom,\n      \"Titre du profil\": titreProfil,\n      \"Email\": \"\",\n      \"Téléphone\": \"\",\n      \"LienCV\": \"\",\n      \"Source\": \"LinkedIn via Google\",\n      \"LienProfil\": item.link || \"\"\n    }\n  };\n});"
+          },
+          "name": "Nettoyer Résultats",
+          "type": "n8n-nodes-base.function",
+          "typeVersion": 1,
+          "position": [
+            660,
+            0
+          ],
+          "id": "9a26d49f-366a-450e-abc8-27887fc14809"
+        },
+        {
+          "parameters": {
+            "values": {
+              "string": [
+                {
+                  "name": "jobTitle",
+                  "value": "alternant OR apprenti OR stagiaire OR etudiant"
+                },
+                {
+                  "name": "industry",
+                  "value": "informatique OR numérique OR intelligence artificielle OR commerce OR marketing"
+                },
+                {
+                  "name": "location",
+                  "value": "France OR Paris OR Lyon OR Marseille OR Toulouse OR Lille OR Nantes OR Strasbourg OR Bordeaux OR Rennes"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "name": "Set Requête Google",
+          "type": "n8n-nodes-base.set",
+          "typeVersion": 1,
+          "position": [
+            0,
+            0
+          ],
+          "id": "f02bd922-29ff-4815-ab11-4938651dd017"
+        },
+        {
+          "parameters": {
+            "assignments": {
+              "assignments": [
+                {
+                  "id": "10172fe2-217f-4c5e-aefc-f731736fceb5",
+                  "name": "Nom",
+                  "value": "={{ $json.Nom }}",
+                  "type": "string"
+                },
+                {
+                  "id": "6dae602f-612a-4aa6-b275-cdab6fc1c7b3",
+                  "name": "Titre du profil",
+                  "value": "={{ $json['Titre du profil'] }}",
+                  "type": "string"
+                },
+                {
+                  "id": "099ac2db-11be-4618-b8a6-5cf08908142d",
+                  "name": "Email",
+                  "value": "={{ $json.Email }}",
+                  "type": "string"
+                },
+                {
+                  "id": "e1fd7f9b-dc3e-450f-8f9f-805a97ab55e5",
+                  "name": "Téléphone",
+                  "value": "={{ $json['Téléphone'] }}",
+                  "type": "string"
+                },
+                {
+                  "id": "35d38013-754e-49e9-95dc-aca97363d407",
+                  "name": "LienCV",
+                  "value": "={{ $json.LienCV }}",
+                  "type": "string"
+                },
+                {
+                  "id": "6c688578-0bc4-4309-94e0-55571e58adc8",
+                  "name": "Source",
+                  "value": "={{ $json.Source }}",
+                  "type": "string"
+                },
+                {
+                  "id": "5277562d-bfef-44d0-b091-8583322122ab",
+                  "name": "LienProfil",
+                  "value": "={{ $json.LienProfil }}",
+                  "type": "string"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "type": "n8n-nodes-base.set",
+          "typeVersion": 3.4,
+          "position": [
+            880,
+            0
+          ],
+          "id": "62243077-50fd-40d6-afed-dc3fb2acaed1",
+          "name": "Edit Fields"
+        },
+        {
+          "parameters": {
+            "jsCode": "const formLink = \"https://forms.gle/EB9hfuQm2V5GaXESA\"; // Remplace par le vrai lien\n\nreturn items.map(item => {\n  const nom = item.json.output?.name || item.json.output?.candidat?.nom || \"Bonjour\";\n\n  const message = \n`Bonjour 👋\n\nNous recrutons en **alternance** des profils motivés pour rejoindre notre programme unique mêlant **automatisation** et **intelligence artificielle**.\n\n✅ Formation gratuite avec diplôme d'État  \n✅ Rémunération pendant 12 mois  \n✅ Travail dans nos bureaux à Paris avec des projets concrets  \n✅ Accompagnement vers l'emploi ou la création de votre startup IA\n\n🎯 Postulez en 1 clic via ce formulaire :  \n${formLink}\n\nAu plaisir de vous compter parmi nos talents 🚀  \nL’équipe BusinessDigital`;\n\n  item.json.linkedinMessage = message;\n  return item;\n});"
+          },
+          "type": "n8n-nodes-base.code",
+          "typeVersion": 2,
+          "position": [
+            1100,
+            0
+          ],
+          "id": "89d960bc-5d33-46a1-9a60-2686b81d55b6",
+          "name": "Code"
+        },
+        {
+          "parameters": {
+            "operation": "append",
+            "documentId": {
+              "__rl": true,
+              "value": "1CeG9Oya7uLMHvexZYU8osbbLtpxEJnA3jQFbXxGawls",
+              "mode": "list",
+              "cachedResultName": "Liste de candidats bruts",
+              "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CeG9Oya7uLMHvexZYU8osbbLtpxEJnA3jQFbXxGawls/edit?usp=drivesdk"
+            },
+            "sheetName": {
+              "__rl": true,
+              "value": "gid=0",
+              "mode": "list",
+              "cachedResultName": "Linkedin",
+              "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CeG9Oya7uLMHvexZYU8osbbLtpxEJnA3jQFbXxGawls/edit#gid=0"
+            },
+            "columns": {
+              "mappingMode": "defineBelow",
+              "value": {
+                "Nom": "={{ $('Edit Fields').item.json.Nom }}",
+                "Titre du profil": "={{ $('Edit Fields').item.json['Titre du profil'] }}",
+                "Email": "={{ $('Edit Fields').item.json.Email }}",
+                "Téléphone": "={{ $('Edit Fields').item.json['Téléphone'] }}",
+                "LienCV": "={{ $('Edit Fields').item.json.LienCV }}",
+                "Source": "={{ $('Edit Fields').item.json.Source }}",
+                "LienProfil": "={{ $('Edit Fields').item.json.LienProfil }}",
+                "Message Linkedin": "={{ $json.linkedinMessage }}"
+              },
+              "matchingColumns": [],
+              "schema": [
+                {
+                  "id": "Nom",
+                  "displayName": "Nom",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Titre du profil",
+                  "displayName": "Titre du profil",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Email",
+                  "displayName": "Email",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Téléphone",
+                  "displayName": "Téléphone",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "LienCV",
+                  "displayName": "LienCV",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Source",
+                  "displayName": "Source",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "LienProfil",
+                  "displayName": "LienProfil",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Message Linkedin",
+                  "displayName": "Message Linkedin",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true,
+                  "removed": false
+                }
+              ],
+              "attemptToConvertTypes": false,
+              "convertFieldsToString": false
+            },
+            "options": {}
+          },
+          "type": "n8n-nodes-base.googleSheets",
+          "typeVersion": 4.5,
+          "position": [
+            1420,
+            0
+          ],
+          "id": "c1b8f77d-bbbd-4765-b8ac-63c7ba55f052",
+          "name": "Rédaction message dans Google Sheet",
+          "credentials": {
+            "googleSheetsOAuth2Api": {
+              "id": "JrQt8saJPmBb8xRc",
+              "name": "Google Sheets formation@businessdigital.fr"
+            }
+          }
+        }
+      ],
+      "connections": {
+        "Trigger - Tous les jours": {
+          "main": [
+            [
+              {
+                "node": "Set Requête Google",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Générer Requête Google": {
+          "main": [
+            [
+              {
+                "node": "Recherche Google API",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Recherche Google API": {
+          "main": [
+            [
+              {
+                "node": "Nettoyer Résultats",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Nettoyer Résultats": {
+          "main": [
+            [
+              {
+                "node": "Edit Fields",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Set Requête Google": {
+          "main": [
+            [
+              {
+                "node": "Générer Requête Google",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Edit Fields": {
+          "main": [
+            [
+              {
+                "node": "Code",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Code": {
+          "main": [
+            [
+              {
+                "node": "Rédaction message dans Google Sheet",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": {
+        "node:Trigger - Tous les jours": {
+          "recurrenceRules": [
+            20
+          ]
+        },
+        "node:Récupération candidatures la bonne alternance": {},
+        "node:Nom : Lire toutes les candidatures IMAP": {
+          "lastMessageUid": 6914
+        },
+        "node:Google Sheets Trigger": {
+          "documentId": "1CeG9Oya7uLMHvexZYU8osbbLtpxEJnA3jQFbXxGawls",
+          "sheetId": 946817789,
+          "lastIndexChecked": 8
+        }
+      },
+      "meta": {
+        "templateCredsSetupCompleted": true
+      },
+      "pinData": {},
+      "versionId": "f106950e-cb21-4ba6-9111-90e70e7d18e0",
+      "triggerCount": 1,
+      "tags": []
+    },
+    {
+      "createdAt": "2025-03-02T20:07:37.064Z",
+      "updatedAt": "2025-03-07T09:14:32.000Z",
+      "id": "vPBUzqZ01AsEfksN",
+      "name": "TD DES 2 :il faut bien expliquer à l'agent ce qu'il doit faire et il va executer. Faut ajouter un outil de verificat° des cara",
+      "active": true,
+      "nodes": [
+        {
+          "parameters": {
+            "operation": "append",
+            "documentId": {
+              "__rl": true,
+              "value": "1qfoqEegq-ySK989R6zeiMrRNMxjeGLItPN6ZUq9ezzI",
+              "mode": "list",
+              "cachedResultName": "Nos titres et descriptions",
+              "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qfoqEegq-ySK989R6zeiMrRNMxjeGLItPN6ZUq9ezzI/edit?usp=drivesdk"
+            },
+            "sheetName": {
+              "__rl": true,
+              "value": 141196947,
+              "mode": "list",
+              "cachedResultName": "Tous les sites ",
+              "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qfoqEegq-ySK989R6zeiMrRNMxjeGLItPN6ZUq9ezzI/edit#gid=141196947"
+            },
+            "columns": {
+              "mappingMode": "defineBelow",
+              "value": {
+                "Final URL": "{{$node[\"Set\"].json[\"Final URL\"]}}",
+                "Headline 1": "{{$node[\"Set\"].json[\"Headline 1\"]}}",
+                "Headline 2": "{{$node[\"Set\"].json[\"Headline 2\"]}}",
+                "Headline 3": "{{$node[\"Set\"].json[\"Headline 3\"]}}",
+                "Description 1": "{{$node[\"Set\"].json[\"Description 1\"]}}",
+                "Description 2": "{{$node[\"Set\"].json[\"Description 2\"]}}"
+              },
+              "matchingColumns": [],
+              "schema": [
+                {
+                  "id": "Account",
+                  "displayName": "Account",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Campaign",
+                  "displayName": "Campaign",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Ad Group",
+                  "displayName": "Ad Group",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Final URL",
+                  "displayName": "Final URL",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Headline 1",
+                  "displayName": "Headline 1",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Headline 2",
+                  "displayName": "Headline 2",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Headline 3",
+                  "displayName": "Headline 3",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Headline 4",
+                  "displayName": "Headline 4",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Headline 5",
+                  "displayName": "Headline 5",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Headline 6",
+                  "displayName": "Headline 6",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Headline 7",
+                  "displayName": "Headline 7",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Headline 8",
+                  "displayName": "Headline 8",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Headline 9",
+                  "displayName": "Headline 9",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Headline 10",
+                  "displayName": "Headline 10",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Headline 11",
+                  "displayName": "Headline 11",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Headline 12",
+                  "displayName": "Headline 12",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Headline 13",
+                  "displayName": "Headline 13",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Headline 14",
+                  "displayName": "Headline 14",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Headline 15",
+                  "displayName": "Headline 15",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Description 1",
+                  "displayName": "Description 1",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Description 2",
+                  "displayName": "Description 2",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Description 3",
+                  "displayName": "Description 3",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Description 4",
+                  "displayName": "Description 4",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "NB caractères",
+                  "displayName": "NB caractères",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Headline sans {",
+                  "displayName": "Headline sans {",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Tous les mots clés ",
+                  "displayName": "Tous les mots clés ",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Final URL\t",
+                  "displayName": "Final URL\t",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Headline 1\t",
+                  "displayName": "Headline 1\t",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Description 1\t",
+                  "displayName": "Description 1\t",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                }
+              ],
+              "attemptToConvertTypes": false,
+              "convertFieldsToString": false
+            },
+            "options": {}
+          },
+          "type": "n8n-nodes-base.googleSheets",
+          "typeVersion": 4.5,
+          "position": [
+            520,
+            -60
+          ],
+          "id": "024f4b06-2746-45dc-bc9f-743e2330d8bc",
+          "name": "Google Sheets1",
+          "alwaysOutputData": false,
+          "credentials": {
+            "googleSheetsOAuth2Api": {
+              "id": "JrQt8saJPmBb8xRc",
+              "name": "Google Sheets account 7"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "agent": "openAiFunctionsAgent",
+            "options": {
+              "systemMessage": "",
+              "returnIntermediateSteps": false
+            }
+          },
+          "type": "@n8n/n8n-nodes-langchain.agent",
+          "typeVersion": 1.7,
+          "position": [
+            -60,
+            -60
+          ],
+          "id": "fb0af49e-1dfe-4aa3-8b4a-04d1a6588cfc",
+          "name": "AI Agent",
+          "alwaysOutputData": true
+        },
+        {
+          "parameters": {
+            "model": {
+              "__rl": true,
+              "value": "gpt-4o-mini",
+              "mode": "list",
+              "cachedResultName": "gpt-4o-mini"
+            },
+            "options": {}
+          },
+          "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+          "typeVersion": 1.2,
+          "position": [
+            -80,
+            140
+          ],
+          "id": "0efd9f18-d85a-4e1c-9af3-67266ca44859",
+          "name": "OpenAI Chat Model",
+          "credentials": {
+            "openAiApi": {
+              "id": "HYXSzKhuyM8B31Ui",
+              "name": "OpenAi account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "contextWindowLength": 50
+          },
+          "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+          "typeVersion": 1.3,
+          "position": [
+            40,
+            140
+          ],
+          "id": "4c6a5a91-f9d1-4704-b83d-bf04696bbd30",
+          "name": "Window Buffer Memory"
+        },
+        {
+          "parameters": {
+            "options": {}
+          },
+          "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+          "typeVersion": 1.1,
+          "position": [
+            -400,
+            -60
+          ],
+          "id": "46d90504-cf2c-4b02-a414-73d53b780c60",
+          "name": "When chat message received",
+          "webhookId": "8c9c408f-1242-4822-900c-393b5cdcbb5f"
+        },
+        {
+          "parameters": {
+            "documentId": {
+              "__rl": true,
+              "value": "1zK6oaNOBTtRhrwTNcIHAauiAWL1t7G_mLvTV8c9qZSg",
+              "mode": "list",
+              "cachedResultName": "Liste des TD à faire",
+              "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zK6oaNOBTtRhrwTNcIHAauiAWL1t7G_mLvTV8c9qZSg/edit?usp=drivesdk"
+            },
+            "sheetName": {
+              "__rl": true,
+              "value": 1292258056,
+              "mode": "list",
+              "cachedResultName": "Liste TD à faire",
+              "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zK6oaNOBTtRhrwTNcIHAauiAWL1t7G_mLvTV8c9qZSg/edit#gid=1292258056"
+            },
+            "options": {}
+          },
+          "type": "n8n-nodes-base.googleSheetsTool",
+          "typeVersion": 4.5,
+          "position": [
+            240,
+            160
+          ],
+          "id": "eb197d05-bf0f-4529-b2ce-380484701067",
+          "name": "Google Sheets",
+          "credentials": {
+            "googleSheetsOAuth2Api": {
+              "id": "JrQt8saJPmBb8xRc",
+              "name": "Google Sheets account 7"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "toolDescription": "l'agent IA va t'utiliser pour extraire des donner des sites web",
+            "url": "https://www.buzzeemedia.com/offre-demploi-jeune-poei-alternance"
+          },
+          "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+          "typeVersion": 1.1,
+          "position": [
+            400,
+            160
+          ],
+          "id": "13c72719-47a5-4984-8b15-b2d35815561b",
+          "name": "HTTP Request"
+        },
+        {
+          "parameters": {
+            "mode": "raw",
+            "jsonOutput": "{\n  \"Final URL\": \"{{$json['Final URL']}}\",\n  \"Headline 1\": \"{{$json['headline1'] + ''}}\",\n  \"Headline 2\": \"{{$json['headline2'] + ''}}\",\n  \"Headline 3\": \"{{$json['headline3'] + ''}}\",\n  \"Description 1\": \"{{$json['description1'] + ''}}\",\n  \"Description 2\": \"{{$json['description2'] + ''}}\"\n}",
+            "options": {}
+          },
+          "type": "n8n-nodes-base.set",
+          "typeVersion": 3.4,
+          "position": [
+            300,
+            -60
+          ],
+          "id": "8c12fcc1-7f37-401f-bc2d-c5966b6d9794",
+          "name": "Edit Fields"
+        },
+        {
+          "parameters": {},
+          "type": "n8n-nodes-base.stickyNote",
+          "position": [
+            40,
+            20
+          ],
+          "typeVersion": 1,
+          "id": "e2e8d7d6-d50f-4373-a0d2-e12e5d613089",
+          "name": "Sticky Note"
+        }
+      ],
+      "connections": {
+        "OpenAI Chat Model": {
+          "ai_languageModel": [
+            [
+              {
+                "node": "AI Agent",
+                "type": "ai_languageModel",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Window Buffer Memory": {
+          "ai_memory": [
+            [
+              {
+                "node": "AI Agent",
+                "type": "ai_memory",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "When chat message received": {
+          "main": [
+            [
+              {
+                "node": "AI Agent",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Google Sheets": {
+          "ai_tool": [
+            [
+              {
+                "node": "AI Agent",
+                "type": "ai_tool",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "AI Agent": {
+          "main": [
+            [
+              {
+                "node": "Edit Fields",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "HTTP Request": {
+          "ai_tool": [
+            [
+              {
+                "node": "AI Agent",
+                "type": "ai_tool",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Edit Fields": {
+          "main": [
+            [
+              {
+                "node": "Google Sheets1",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": null,
+      "meta": {
+        "templateCredsSetupCompleted": true
+      },
+      "pinData": {},
+      "versionId": "d6f227eb-919f-48a8-86fb-8d402427d346",
+      "triggerCount": 2,
+      "tags": []
+    },
+    {
+      "createdAt": "2025-04-12T08:48:42.351Z",
+      "updatedAt": "2025-04-12T09:55:13.000Z",
+      "id": "zE75SGhD8PrFQc76",
+      "name": "Cours: Déploiement des workflows automatisés (workflow de prise de rendez-vous automatique)",
+      "active": true,
+      "nodes": [
+        {
+          "parameters": {
+            "formTitle": "Formulaire test",
+            "formDescription": "C'est un formulaire ",
+            "formFields": {
+              "values": [
+                {
+                  "fieldLabel": "Nom",
+                  "requiredField": true
+                },
+                {
+                  "fieldLabel": "Prenom",
+                  "requiredField": true
+                },
+                {
+                  "fieldLabel": "Email",
+                  "fieldType": "email",
+                  "requiredField": true
+                },
+                {
+                  "fieldLabel": "Date de   Rendez-vous Soufaité ?",
+                  "fieldType": "date",
+                  "requiredField": true
+                },
+                {
+                  "fieldLabel": "Numéro de télephone",
+                  "fieldType": "number",
+                  "placeholder": "0743335353",
+                  "requiredField": true
+                },
+                {
+                  "fieldLabel": "A quelle heure le rendez-vous ?",
+                  "fieldType": "number",
+                  "placeholder": "16",
+                  "requiredField": true
+                },
+                {
+                  "fieldLabel": "Pour combien des heures ?",
+                  "placeholder": "1",
+                  "requiredField": true
+                }
+              ]
+            },
+            "options": {}
+          },
+          "type": "n8n-nodes-base.formTrigger",
+          "typeVersion": 2.2,
+          "position": [
+            -480,
+            -80
+          ],
+          "id": "955f9a46-b5c1-4af5-bde2-036ff7a70b76",
+          "name": "On form submission",
+          "webhookId": "2d53b538-11e8-4108-8c33-02fa3616f844"
+        },
+        {
+          "parameters": {
+            "jsCode": "const submittedAt = new Date($json.submittedAt);  // Date de soumission\nconst desiredDate = new Date($input.first().json['Date de   Rendez-vous Soufaité ?']); // Date souhaitée\n\nconst differenceInDays = (desiredDate - submittedAt) / (1000 * 3600 * 24); // Calcul de la différence en jours\n\nif (desiredDate < submittedAt) {\n    return { \"error\": \"La date de rendez-vous souhaitée est déjà passée.\" };\n} else if (differenceInDays <= 3) {\n    return { \"error\": \"La date de rendez-vous est trop proche.\" };\n} else {\n    return { \"error\": null, \"validDate\": true };\n}\n"
+          },
+          "type": "n8n-nodes-base.code",
+          "typeVersion": 2,
+          "position": [
+            -300,
+            -80
+          ],
+          "id": "1cde2ae6-3204-44fa-a788-c61ff843eb15",
+          "name": "Code"
+        },
+        {
+          "parameters": {
+            "rules": {
+              "values": [
+                {
+                  "conditions": {
+                    "options": {
+                      "caseSensitive": true,
+                      "leftValue": "",
+                      "typeValidation": "strict",
+                      "version": 2
+                    },
+                    "conditions": [
+                      {
+                        "leftValue": "={{ $json[\"error\"] }}",
+                        "rightValue": "La date de rendez-vous souhaitée est déjà passée.",
+                        "operator": {
+                          "type": "string",
+                          "operation": "equals"
+                        },
+                        "id": "4a681c89-b72a-4311-869d-bb0935d35428"
+                      }
+                    ],
+                    "combinator": "and"
+                  }
+                },
+                {
+                  "conditions": {
+                    "options": {
+                      "caseSensitive": true,
+                      "leftValue": "",
+                      "typeValidation": "strict",
+                      "version": 2
+                    },
+                    "conditions": [
+                      {
+                        "id": "c1158204-133b-43b2-9594-b423169c4047",
+                        "leftValue": "={{ $json.error }}",
+                        "rightValue": "La date de rendez-vous est trop proche.",
+                        "operator": {
+                          "type": "string",
+                          "operation": "equals",
+                          "name": "filter.operator.equals"
+                        }
+                      }
+                    ],
+                    "combinator": "and"
+                  }
+                },
+                {
+                  "conditions": {
+                    "options": {
+                      "caseSensitive": true,
+                      "leftValue": "",
+                      "typeValidation": "strict",
+                      "version": 2
+                    },
+                    "conditions": [
+                      {
+                        "id": "5c7bf112-3191-439b-96f2-6cc7f2fccd9e",
+                        "leftValue": "={{ $json.validDate }}",
+                        "rightValue": true,
+                        "operator": {
+                          "type": "boolean",
+                          "operation": "equals"
+                        }
+                      }
+                    ],
+                    "combinator": "and"
+                  }
+                }
+              ]
+            },
+            "options": {}
+          },
+          "type": "n8n-nodes-base.switch",
+          "typeVersion": 3.2,
+          "position": [
+            -100,
+            -80
+          ],
+          "id": "fa3e2914-67b7-41d3-ad74-0e036b5ee0d3",
+          "name": "Switch"
+        },
+        {
+          "parameters": {
+            "sendTo": "={{ $('On form submission').item.json.Email }}",
+            "subject": "Prise de rdv accordé",
+            "message": "=<p>Bonjour {{ $('On form submission').item.json.Prenom }},</p>\n\n<p>Votre rendez-vous pour le {{ $('On form submission').item.json['Date de   Rendez-vous Soufaité ?'] }} a bien été pris en compte.</p>\n\n<p>Nous vous remercions de nous avoir choisis et nous restons à votre disposition pour toute question.</p>\n\n<p>Cordialement,<br>L'équipe de prise de rendez-vous</p>\n",
+            "options": {}
+          },
+          "type": "n8n-nodes-base.gmail",
+          "typeVersion": 2.1,
+          "position": [
+            300,
+            -200
+          ],
+          "id": "007d9fe2-0090-4229-bf58-38232c808f57",
+          "name": "Gmail",
+          "webhookId": "c333e7de-0a32-44ff-aaa5-e9412f0e4461",
+          "credentials": {
+            "gmailOAuth2": {
+              "id": "moWVnUVbLD3D8t2b",
+              "name": "amahamat@businessdigital.fr"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "calendar": {
+              "__rl": true,
+              "value": "amahamat@businessdigital.fr",
+              "mode": "list",
+              "cachedResultName": "amahamat@businessdigital.fr"
+            },
+            "start": "={{ new Date($('On form submission').item.json['Date de   Rendez-vous Soufaité ?'] + \"T\" + $('On form submission').item.json['A quelle heure le rendez-vous ?'] + \":00\") }}\n\n",
+            "end": "={{ new Date($('On form submission').item.json['Date de   Rendez-vous Soufaité ?'] + \"T\" + $('On form submission').item.json['A quelle heure le rendez-vous ?'] + \":00\").plus($('On form submission').item.json['Pour combien des heures ?'], 'hour') }}\n",
+            "additionalFields": {
+              "description": "=Rendez-vous du client: {{ $('On form submission').item.json.Nom }} {{ $('On form submission').item.json.Prenom }}",
+              "summary": "Rendez-vous client"
+            }
+          },
+          "type": "n8n-nodes-base.googleCalendar",
+          "typeVersion": 1.3,
+          "position": [
+            140,
+            -200
+          ],
+          "id": "8cf1b379-0c72-40cb-a19a-ee67a5f0e48e",
+          "name": "Google Calendar",
+          "credentials": {
+            "googleCalendarOAuth2Api": {
+              "id": "l9fwuxap8gbzxE8H",
+              "name": "amahamat@businessdigital.fr"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "sendTo": "={{ $('On form submission').item.json.Email }}",
+            "subject": "Prise de rendez-vous",
+            "message": "=<p>Bonjour {{ $('On form submission').item.json.Prenom }},</p> <p>Nous vous informons que la date que vous avez choisie pour votre rendez-vous ({{ $('On form submission').item.json['Date de   Rendez-vous Soufaité ?'] }}) est trop proche de la date de soumission de votre demande.</p> <p>Nous vous invitons à choisir une nouvelle date qui aprés trois de votre date de soumission en cliquant sur ce lien :<br> <a href=\"https://businessdigital.app.n8n.cloud/form/2d53b538-11e8-4108-8c33-02fa3616f844\">Choisir un nouveau rendez-vous</a></p> <p>Nous restons à votre disposition pour toute question.</p> <p>Cordialement,<br>L'équipe de prise de rendez-vous</p>",
+            "options": {}
+          },
+          "type": "n8n-nodes-base.gmail",
+          "typeVersion": 2.1,
+          "position": [
+            140,
+            -20
+          ],
+          "id": "f0242853-6dbf-43b2-abfc-7cdb85b9e482",
+          "name": "Gmail1",
+          "webhookId": "08fb4c87-2727-4d16-b91a-160868437fde",
+          "credentials": {
+            "gmailOAuth2": {
+              "id": "moWVnUVbLD3D8t2b",
+              "name": "amahamat@businessdigital.fr"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "sendTo": "={{ $('On form submission').item.json.Email }}",
+            "subject": "Informations concernant votre rendez-vous",
+            "message": "=<p>Bonjour {{ $('On form submission').item.json.Prenom }},</p> <p>Nous vous informons que la date que vous avez choisie pour votre rendez-vous ({{ $('On form submission').item.json['Date de   Rendez-vous Soufaité ?'] }}) est déjà passée.</p> <p>Nous vous invitons à choisir une nouvelle date en cliquant sur ce lien :<br> <a href=\"https://businessdigital.app.n8n.cloud/form/2d53b538-11e8-4108-8c33-02fa3616f844\">Choisir un nouveau rendez-vous</a></p> <p>Nous restons à votre disposition pour toute question.</p> <p>Cordialement,<br>L'équipe de prise de rendez-vous</p>",
+            "options": {}
+          },
+          "type": "n8n-nodes-base.gmail",
+          "typeVersion": 2.1,
+          "position": [
+            160,
+            180
+          ],
+          "id": "76df2d9d-a351-4c4c-a4fa-f57397a2925a",
+          "name": "Gmail2",
+          "webhookId": "85f4b554-78e7-40e5-971b-0f584d891532",
+          "credentials": {
+            "gmailOAuth2": {
+              "id": "moWVnUVbLD3D8t2b",
+              "name": "amahamat@businessdigital.fr"
+            }
+          }
+        }
+      ],
+      "connections": {
+        "On form submission": {
+          "main": [
+            [
+              {
+                "node": "Code",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Code": {
+          "main": [
+            [
+              {
+                "node": "Switch",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Switch": {
+          "main": [
+            [
+              {
+                "node": "Gmail2",
+                "type": "main",
+                "index": 0
+              }
+            ],
+            [
+              {
+                "node": "Gmail1",
+                "type": "main",
+                "index": 0
+              }
+            ],
+            [
+              {
+                "node": "Google Calendar",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Google Calendar": {
+          "main": [
+            [
+              {
+                "node": "Gmail",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": null,
+      "meta": {
+        "templateCredsSetupCompleted": true
+      },
+      "pinData": {},
+      "versionId": "54fcae57-be45-44eb-b0fe-1f9a5d4aca34",
+      "triggerCount": 2,
+      "tags": []
+    }
+  ],
+  "nextCursor": null
+}
